@@ -1,10 +1,26 @@
 const std = @import("std");
-const testing = std.testing;
+const glfw = @import("zglfw");
 
-export fn add(a: i32, b: i32) i32 {
-    return a + b;
+pub fn open() !void {
+    try glfw.init();
+    defer glfw.terminate();
+
+    const window = try glfw.Window.create(800, 600, "zgk!", null);
+    defer window.destroy();
+
+    glfw.makeContextCurrent(window);
+
+    glfw.swapInterval(1);
+
+    while (!window.shouldClose()) {
+        glfw.pollEvents();
+
+        std.debug.print("here\n", .{});
+
+        window.swapBuffers();
+    }
 }
 
-test "basic add functionality" {
-    try testing.expect(add(3, 7) == 10);
+pub fn main() !void {
+    try open();
 }
