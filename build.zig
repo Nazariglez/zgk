@@ -30,10 +30,15 @@ pub fn createLib(b: *std.Build, target: std.zig.CrossTarget, optimize: std.built
         .optimize = optimize,
     });
 
-    b.installArtifact(lib);
+    const lib_options = b.addOptions();
+    lib_options.addOption(bool, "empty", false);
+
+    lib.addOptions("build_options", lib_options);
 
     // deps
     addDependencies(b, lib, target, optimize);
+
+    b.installArtifact(lib);
 
     return lib;
 }
