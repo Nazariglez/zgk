@@ -12,7 +12,7 @@ pub const WindowImpl = struct {
         glfw.makeContextCurrent(win);
         glfw.swapInterval(1);
 
-        return WindowImpl {
+        return WindowImpl{
             .win = win,
         };
     }

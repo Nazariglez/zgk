@@ -23,11 +23,9 @@ const Backend = @import("./backends/desktop/main.zig").Backend;
 //}
 
 pub fn start() !void {
-    const options = .{
-        .window = .{
-            .title = "Super Duper Window",
-        }
-    };
+    const options = .{ .window = .{
+        .title = "Super Duper Window",
+    } };
     var backend = try Backend.init(options);
     defer backend.deinit();
 
