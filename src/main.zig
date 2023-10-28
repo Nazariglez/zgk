@@ -1,26 +1,36 @@
 const std = @import("std");
-const glfw = @import("zglfw");
+const Backend = @import("./backends/desktop/main.zig").Backend;
+//const glfw = @import("zglfw");
 
-pub fn open() !void {
-    try glfw.init();
-    defer glfw.terminate();
+//pub fn open() !void {
+//    try glfw.init();
+//    defer glfw.terminate();
+//
+//    const window = try glfw.Window.create(800, 600, "zgk!", null);
+//    defer window.destroy();
 
-    const window = try glfw.Window.create(800, 600, "zgk!", null);
-    defer window.destroy();
+//    glfw.makeContextCurrent(window);
 
-    glfw.makeContextCurrent(window);
+//    glfw.swapInterval(1);
 
-    glfw.swapInterval(1);
+//    while (!window.shouldClose()) {
+//        glfw.pollEvents();
 
-    while (!window.shouldClose()) {
-        glfw.pollEvents();
+//        std.debug.print("here\n", .{});
 
-        std.debug.print("here\n", .{});
+//        window.swapBuffers();
+//    }
+//}
 
-        window.swapBuffers();
-    }
-}
+pub fn start() !void {
+    const options = .{
+        .window = .{
+            .title = "Super Duper Window",
+        }
+    };
+    var backend = try Backend.init(options);
+    defer backend.deinit();
 
-pub fn main() !void {
-    try open();
+    backend.window.loop();
+    //try open();
 }
