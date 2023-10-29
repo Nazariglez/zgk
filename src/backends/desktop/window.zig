@@ -2,7 +2,7 @@ const glfw = @import("zglfw");
 const core = @import("../../core/main.zig");
 
 pub const WindowImpl = struct {
-    const Self = *@This();
+    const Self = @This();
 
     win: *glfw.Window,
 
