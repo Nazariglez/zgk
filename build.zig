@@ -43,18 +43,18 @@ fn linkDependencies(b: *std.Build, lib: *std.Build.CompileStep, target: std.zig.
     const zpool_pkg = zpool.package(b, target, optimize, .{});
     zpool_pkg.link(lib);
 
-    const zgpu = @import("deps/zig-gamedev/libs/zgpu/build.zig");
-    const zgpu_pkg = zgpu.package(b, target, optimize, .{
-        .deps = .{ .zpool = zpool_pkg.zpool, .zglfw = zglfw_pkg.zglfw },
-    });
-    zgpu_pkg.link(lib);
+    // const zgpu = @import("deps/zig-gamedev/libs/zgpu/build.zig");
+    // const zgpu_pkg = zgpu.package(b, target, optimize, .{
+    //     .deps = .{ .zpool = zpool_pkg.zpool, .zglfw = zglfw_pkg.zglfw },
+    // });
+    // zgpu_pkg.link(lib);
 
     return b.createModule(.{
         .source_file = .{ .path = thisDir() ++ "/src/main.zig" },
         .dependencies = &.{
             .{ .name = "zglfw", .module = zglfw_pkg.zglfw },
             .{ .name = "zpool", .module = zpool_pkg.zpool },
-            .{ .name = "zgpu", .module = zgpu_pkg.zgpu },
+            // .{ .name = "zgpu", .module = zgpu_pkg.zgpu },
         },
     });
 }
