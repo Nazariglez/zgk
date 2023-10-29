@@ -5,14 +5,11 @@ const WindowImpl = @import("./window.zig").WindowImpl;
 pub const Backend = struct {
     const Self = *@This();
 
-    allocator: std.mem.Allocator,
     window: core.Window(WindowImpl),
 
-    pub fn init(allocator: std.mem.Allocator, opts: core.BackendOptions) !Backend {
-        var alloc = allocator;
-        var window = try core.Window(WindowImpl).init(&alloc, opts.window);
+    pub fn init(opts: core.BackendOptions) !Backend {
+        var window = try core.Window(WindowImpl).init(opts.window);
         return Backend{
-            .allocator = alloc,
             .window = window,
         };
     }

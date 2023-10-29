@@ -16,31 +16,27 @@ pub const WindowOptions = struct {
 pub fn Window(comptime T: type) type {
     return struct {
         const Self = @This();
-        impl: ?*T,
+        impl: T,
 
-        pub fn init(allocator: *std.mem.Allocator, opts: WindowOptions) !Self {
-            var impl = try allocator.create(T);
-            impl.* = try T.init(opts);
+        pub fn init(opts: WindowOptions) !Self {
+            const impl = try T.init(opts);
             return Self{
                 .impl = impl,
             };
         }
 
-        fn size(self: *Self) [2]u32 {
-            return self.impl.?.size();
+        fn size(self: *const Self) [2]u32 {
+            return self.impl.size();
         }
 
         pub fn loop(self: *Self) void {
-            self.impl.?.loop();
+            self.impl.loop();
         }
 
-        pub fn deinit(self: Self) void {
+        pub fn deinit(self: *Self) void {
             std.debug.print("\nCleaning Window", .{});
-            var s = self;
-            var impl = self.impl.?;
-            s.impl = null;
-            impl.deinit();
-            std.debug.print("\nWindow cleaned {*} {*} {*}", .{ &s.impl, &impl, &self.impl });
+            self.impl.deinit();
+            std.debug.print("\nWindow cleaned {*} ", .{&self.impl});
         }
     };
 }

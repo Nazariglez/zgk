@@ -17,7 +17,7 @@ pub const WindowImpl = struct {
         };
     }
 
-    pub fn loop(self: Self) void {
+    pub fn loop(self: *Self) void {
         while (!self.win.shouldClose()) {
             glfw.pollEvents();
 
@@ -27,7 +27,7 @@ pub const WindowImpl = struct {
         }
     }
 
-    pub fn deinit(self: Self) void {
+    pub fn deinit(self: *Self) void {
         const std = @import("std");
         std.debug.print("\nCleaning window Impl glfw", .{});
         self.win.destroy();
