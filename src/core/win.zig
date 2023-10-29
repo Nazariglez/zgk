@@ -25,15 +25,19 @@ pub fn Window(comptime T: type) type {
             };
         }
 
-        fn size(self: *const Self) [2]u32 {
+        pub fn size(self: *const Self) [2]u32 {
             return self.impl.size();
+        }
+
+        pub fn set_size(self: *Self, width: u32, height: u32) void {
+            self.impl.set_size(width, height);
         }
 
         pub fn loop(self: *Self) void {
             self.impl.loop();
         }
 
-        pub fn deinit(self: *Self) void {
+        pub fn deinit(self: Self) void {
             std.debug.print("\nCleaning Window", .{});
             self.impl.deinit();
             std.debug.print("\nWindow cleaned {*} ", .{&self.impl});

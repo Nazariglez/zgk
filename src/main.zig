@@ -11,5 +11,9 @@ pub fn start() !void {
     var backend = try Backend.init(options);
     defer backend.deinit();
 
+    std.debug.print("\nsize: {any}\n", .{backend.window.size()});
+    backend.window.set_size(400, 400);
+    std.debug.print("\nsize: {any}\n", .{backend.window.size()});
+
     backend.window.loop();
 }
