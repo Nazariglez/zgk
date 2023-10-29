@@ -28,7 +28,10 @@ pub const WindowImpl = struct {
     }
 
     pub fn deinit(self: Self) void {
+        const std = @import("std");
+        std.debug.print("\nCleaning window Impl glfw", .{});
         self.win.destroy();
         glfw.terminate();
+        std.debug.print("\nCleaned window Impl glfw", .{});
     }
 };

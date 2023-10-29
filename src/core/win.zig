@@ -1,3 +1,5 @@
+const std = @import("std");
+
 pub const WindowOptions = struct {
     title: [:0]const u8 = "zkg window",
     width: u32 = 800,
@@ -14,33 +16,31 @@ pub const WindowOptions = struct {
 pub fn Window(comptime T: type) type {
     return struct {
         const Self = @This();
-        impl: T,
+        impl: ?*T,
 
-        pub fn init(opts: WindowOptions) !Self {
-            const impl = try T.init(opts);
+        pub fn init(allocator: *std.mem.Allocator, opts: WindowOptions) !Self {
+            var impl = try allocator.create(T);
+            impl.* = try T.init(opts);
             return Self{
                 .impl = impl,
             };
         }
 
         fn size(self: *Self) [2]u32 {
-            return self.impl.size;
-        }
-
-        fn set_size(self: *Self, width: u32, height: u32) void {
-            self.impl.size[0] = width;
-            self.impl.size[1] = height;
+            return self.impl.?.size();
         }
 
         pub fn loop(self: *Self) void {
-            self.impl.loop();
+            self.impl.?.loop();
         }
 
         pub fn deinit(self: Self) void {
-            _ = self;
-            //self.impl.deinit();
+            std.debug.print("\nCleaning Window", .{});
+            var s = self;
+            var impl = self.impl.?;
+            s.impl = null;
+            impl.deinit();
+            std.debug.print("\nWindow cleaned {*} {*} {*}", .{ &s.impl, &impl, &self.impl });
         }
     };
 }
-
-// https://www.openmymind.net/Zig-Interfaces/
