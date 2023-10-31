@@ -4,6 +4,7 @@ const Backend = @import("./backends/desktop/main.zig").Backend;
 pub fn start() !void {
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
     defer _ = gpa.deinit();
+    const allocator = gpa.allocator();
 
     const options = .{
         .window = .{
@@ -12,8 +13,8 @@ pub fn start() !void {
             .maximized = true,
         },
     };
-    var backend = try Backend.init(options);
-    defer backend.deinit();
+    var backend = try Backend.init(allocator, options);
+    defer backend.deinit(allocator);
 
     std.debug.print("\nsize: {any}\n", .{backend.window.size()});
     // backend.window.set_size(400, 400);

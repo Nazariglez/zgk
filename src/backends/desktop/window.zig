@@ -1,3 +1,5 @@
+const std = @import("std");
+const zgpu = @import("zgpu");
 const glfw = @import("zglfw");
 const core = @import("../../core/main.zig");
 
@@ -7,8 +9,9 @@ pub const WindowImpl = struct {
     win: *glfw.Window,
     min_limits: [2]i32,
     max_limits: [2]i32,
+    gfx: *zgpu.GraphicsContext,
 
-    pub fn init(opts: core.WindowOptions) !WindowImpl {
+    pub fn init(allocator: std.mem.Allocator, opts: core.WindowOptions) !WindowImpl {
         try glfw.init();
         var win = try glfw.Window.create(@intCast(opts.width), @intCast(opts.height), opts.title, null);
         glfw.makeContextCurrent(win);
@@ -27,10 +30,13 @@ pub const WindowImpl = struct {
         // todo: fullscreen
         // todo: position
 
+        const gctx = try zgpu.GraphicsContext.create(allocator, win, .{});
+
         return WindowImpl{
             .win = win,
             .min_limits = min_limits,
             .max_limits = max_limits,
+            .gfx = gctx,
         };
     }
 
@@ -76,11 +82,11 @@ pub const WindowImpl = struct {
         }
     }
 
-    pub fn deinit(self: Self) void {
-        const std = @import("std");
+    pub fn deinit(self: Self, allocator: std.mem.Allocator) void {
         std.debug.print("\nCleaning window Impl glfw", .{});
         self.win.destroy();
         glfw.terminate();
+        self.gfx.destroy(allocator);
         std.debug.print("\nCleaned window Impl glfw", .{});
     }
 };

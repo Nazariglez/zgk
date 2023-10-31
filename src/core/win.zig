@@ -30,8 +30,8 @@ pub fn Window(comptime T: type) type {
         _maximized: bool,
         _fullscreen: bool,
 
-        pub fn init(opts: WindowOptions) !Self {
-            const _impl = try T.init(opts);
+        pub fn init(allocator: std.mem.Allocator, opts: WindowOptions) !Self {
+            const _impl = try T.init(allocator, opts);
             const has_position = (opts.position_x != null and opts.position_y != null);
             const position = if (has_position) [_]u32{ opts.position_x.?, opts.position_y.? } else null;
             return Self{
@@ -142,9 +142,9 @@ pub fn Window(comptime T: type) type {
             self._impl.loop();
         }
 
-        pub fn deinit(self: Self) void {
+        pub fn deinit(self: Self, allocator: std.mem.Allocator) void {
             std.debug.print("\nCleaning Window", .{});
-            self._impl.deinit();
+            self._impl.deinit(allocator);
             std.debug.print("\nWindow cleaned {*} ", .{&self._impl});
         }
     };
